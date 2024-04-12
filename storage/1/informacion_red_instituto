@@ -1,0 +1,5 @@
+La red se divide en subredes 192.168."18".xxxx
+Es /16
+En el archivo de conf de netplan debes de poner la IP/16
+la gateway es 192.168.0.1, no tiene gateways por subredes (al parecer)
+utiliza el dns de google
