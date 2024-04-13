@@ -60,7 +60,6 @@ function subirArchivo($nombreArchivo, $tamañoArchivo, $rutaTemporal, $categoria
 
     // Construir la ruta de la carpeta de almacenamiento
     $carpeta_usuario = __DIR__ . '/../storage/' . $usuario_id;
-    var_dump($carpeta_usuario);
     // Verificar si la carpeta del usuario existe, si no, crearla
     if (!file_exists($carpeta_usuario)) {
         if (!mkdir($carpeta_usuario, 0777, true)) {
@@ -69,8 +68,13 @@ function subirArchivo($nombreArchivo, $tamañoArchivo, $rutaTemporal, $categoria
         }
     }
 
+    // Generar un nombre de archivo único con prefijo de ID de usuario
+    $prefijoNombreArchivo = $usuario_id . "_";
+    $extensionArchivo = pathinfo($nombreArchivo, PATHINFO_EXTENSION);
+    $nombreArchivoUnico = $prefijoNombreArchivo . uniqid() . "." . $extensionArchivo;
+
     // Construir la ruta completa del archivo en la carpeta del usuario
-    $ruta_archivo_destino = $carpeta_usuario . '/' . $nombreArchivo;
+    $ruta_archivo_destino = $carpeta_usuario . '/' . $nombreArchivoUnico;
     
     // Mover el archivo a la carpeta del usuario
     if (move_uploaded_file($rutaTemporal, $ruta_archivo_destino)) {
@@ -109,7 +113,7 @@ function obtener_ficheros_paginados($usuario_email, $start, $limit) {
     FROM archivo
     INNER JOIN categoria ON archivo.categoria_id = categoria.id
     WHERE usuario_id = $usuario_id
-    ORDER BY fecha_subida ASC
+    ORDER BY fecha_subida DESC
     LIMIT $start, $limit";
     $stmt = $pdo->query($sql);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -234,6 +238,28 @@ function obtenerTipoArchivo($id_fichero) {
     return $tipoArchivo;
 }
 
+function obtenerNombreArchivo($id_fichero) {
+    global $pdo;
+    
+    $consulta = "SELECT nombre_archivo FROM archivo WHERE id = ?";
+
+    // Preparación de la consulta
+    $resultado = $pdo->prepare($consulta);
+
+    // Ejecutar la consulta con los parámetros
+    $resultado->execute([$id_fichero]);
+
+    // Obtención del resultado
+    // $resultado = $resultado->get_result();
+
+    // Si no se encontró el archivo
+    if ($resultado->num_rows === 0) {
+        return null;
+    }
+    $nombreArchivo = $resultado->fetchColumn();
+    return $nombreArchivo;
+}
+
 
 function eliminar_archivo($usuario_email, $id_fichero) : bool{
   // Obtener ID de usuario
@@ -279,12 +305,14 @@ function descargar_archivo($usuario_email, $id_fichero) : bool {
     // Validar permisos
     if (esPropietarioArchivo($usuario_id, $id_fichero)) {
        // Obtener ruta del archivo
+       
+        $nombreArchivo = obtenerNombreArchivo($id_fichero);
         $ruta_archivo = obtenerRutaArchivo($id_fichero);
         $tipoArchivo = obtenerTipoArchivo($id_fichero);
         if ($ruta_archivo) {
             // Verificar si el archivo existe
             if (file_exists($ruta_archivo)) {
-                header("Content-disposition: attachment; filename=" . basename($ruta_archivo));
+                header("Content-disposition: attachment; filename=" . ($nombreArchivo));
                 header("Content-type: $tipoArchivo");
                 readfile($ruta_archivo);
                 return true;
