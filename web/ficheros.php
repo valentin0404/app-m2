@@ -14,7 +14,7 @@ session_start();
 
 // Verificar si ya hay una sesión iniciada
 if (!isset($_SESSION['user'])) {
-    // Redirigir al usuario al index.php
+    // Redirigir al usuario al login
     header("Location: ./user_login.php");
     exit; // Detener la ejecución del script
 }?>
@@ -160,10 +160,7 @@ if (!isset($_SESSION['user'])) {
                 <?php endforeach?>
               </tbody>
             </table>
-          <?php else: ?>
-            <p>No tiene archivos subidos.</p>
-          <?php endif; ?>
-          <nav aria-label="Botones de navegacion">
+            <nav aria-label="Botones de navegacion">
             <ul class="pagination justify-content-center">
               <?php if ($page > 1): ?>
                 <li class="page-item">
@@ -208,6 +205,9 @@ if (!isset($_SESSION['user'])) {
               <?php endif; ?>
             </ul>
           </nav>
+          <?php else: ?>
+            <p>No tiene archivos subidos.</p>
+          <?php endif; ?>
     </div>
     <footer id="footer">
     <?php include(__DIR__ . "/partials_footer.php"); ?>

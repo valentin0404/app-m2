@@ -54,8 +54,9 @@ if (!isset($_SESSION['user'])) {
             <form action="./editar_action.php" method="post" enctype="multipart/form-data" class="mt-4">
             <div class="row g-5 align-items-center mb-3">
                 <input type="hidden" name="id_fichero" value="<?php echo $id_fichero; ?>">
-                <div class="col-auto">
+                <div class="col-5">
                     <label for="nombre_archivo" class="form-label">Nombre Archivo</label>
+                    <small class="text-muted"> (No olvides la extensión)</small>
                     <input type="text" class="form-control" name="nombre_archivo" id="nombre_archivo" placeholder="<?php echo $archivo[0]['nombre_archivo']; ?>">
                 </div>
             </div>
@@ -84,7 +85,7 @@ if (!isset($_SESSION['user'])) {
                 </div>
                 <div class="col-auto">
                     <span id="categoryHelpInline" class="form-text">
-                    Selecciona la categoría del fichero - (Categoria actual: <?php echo $archivo[0]['nombre_categoria']; ?>).
+                    Selecciona la categoría del fichero - (Categoria actual: <?php echo $archivo[0]['nombre_categoria']; ?>)
                     </span>
                 </div>
             </div>

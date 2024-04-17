@@ -15,7 +15,7 @@
 
 <body>
     <?php include(__DIR__ . "/partials_header.php"); ?>
-  <main style="">
+  <main>
     <?php
     session_start(); 
     if (!isset($_SESSION['user'])) : ?>

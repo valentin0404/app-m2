@@ -32,7 +32,7 @@ if (empty($errors)) {
     if (!$hasSession) {
         $errors[] = "Credenciales no válidas";
     }
-    // Si la variable $hasSession es verdadera, se redirecciona al usuario a la página "image_create.php"
+    // Si la variable $hasSession es verdadera, se redirecciona al usuario a la página "index.php"
     else {
         header("Location: ./index.php");
     } 

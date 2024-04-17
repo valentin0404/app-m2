@@ -75,7 +75,7 @@ function subirArchivo($nombreArchivo, $tamañoArchivo, $rutaTemporal, $categoria
 
     // Construir la ruta completa del archivo en la carpeta del usuario
     $ruta_archivo_destino = $carpeta_usuario . '/' . $nombreArchivoUnico;
-    
+
     // Mover el archivo a la carpeta del usuario
     if (move_uploaded_file($rutaTemporal, $ruta_archivo_destino)) {
         // Preparar la consulta para insertar un nuevo registro en la tabla 'archivo'
